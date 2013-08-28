@@ -1,15 +1,21 @@
 var indianamate = (function(window, document, undefined){
 	var indianamate = {
+		map: {},
 		frames: [],
 		marker: {},
 		animationFrame: null,
-		init: function(route, marker){
+		route: {},
+		init: function(map, route, marker){
 			if(!marker){
 				indianamate.marker.setPosition = function(){};
 			}
 			else {
 				this.marker = marker;
 			}
+
+			this.map = map;
+
+			this.route = route;
 
 			for(var i = 0, j = route.length; i < (j - 1); i++){
 				this.frames = this.frames.concat(this.getFramesFromPath(route[i].LatLng, route[i+1].LatLng));
@@ -24,6 +30,7 @@ var indianamate = (function(window, document, undefined){
 			for(var i = 0; i < numFrames; i++) {
 				rtn.push(new google.maps.LatLng(startLatLng.lat() + i * addx, startLatLng.lng() + i * addy));
 			}
+			rtn.push(finishLatLng);
 
 			return rtn;
 		},
@@ -38,13 +45,20 @@ var indianamate = (function(window, document, undefined){
 					visible: true
 				});
 
-			path.setMap(map);
+			path.setMap(this.map);
 			map.panTo(frameB);
 			this.marker.setPosition(frameB);
 		},
 		animate: function(){
 			indianamate.step();
 			if(indianamate.frames.length > 0){
+				for(var i = 0, j = indianamate.route.length; i < j; i++){
+					var mark = indianamate.route[i];
+					if(indianamate.frames[0] == mark.LatLng && mark.stop){
+						return;
+					}
+				}
+
 				indianamate.animationFrame = requestAnimationFrame(indianamate.animate);
 			}
 		},
@@ -55,39 +69,3 @@ var indianamate = (function(window, document, undefined){
 
 	return indianamate;
 })(this, this.document);
-
-// enable the visual refresh
-google.maps.visualRefresh = true;
-
-// setup our map objects
-var map;
-
-// initialize the map
-google.maps.event.addDomListener(window, 'load', function(){
-	var mapOptions = {
-			center: new google.maps.LatLng(0,0),
-			zoom: 5,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		},
-		markers = [];
-
-	// draw map
-	map = new google.maps.Map(document.getElementById('indianamate-map'), mapOptions);
-
-	// plot markers + lines
-	for(var i = 0, j = key_locations.length; i < j; i++){
-		e = key_locations[i];
-		markers.push(new google.maps.Marker({
-			position: e.LatLng,
-			map: map,
-			title: e.formatted_address
-		}));
-	}
-
-	indianamate.init(key_locations, new google.maps.Marker({
-		position: new google.maps.LatLng(0,0),
-		map: map,
-		title: "indianamate"
-	}));
-	indianamate.animate();
-});

@@ -3,13 +3,37 @@
 <head>
 	<meta charset="utf-8">
 	<title>indianamate</title>
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css">
 	<link rel="stylesheet" href="assets/css/indianamate.css">
 </head>
 <body>
 	<div id="indianamate-map"></div>
 	<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyD4JlwJj5xb-cA4MHu1llNbtbiTIGISDWU&sensor=false"></script>
-	<script src="assets/data/indianamate.stops.js"></script>
+	<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+	<!--<script src="asset/js/indianamate.js"></script>
+	<script>
+		var map, indianamate;
+
+		$(function(){
+			google.maps.visualRefresh = true;
+
+			google.maps.event.addDomListener(window, 'load', function(){
+				var mapOptions = {
+						center: new google.maps.LatLng(0,0),
+						zoom: 5,
+						mapTypeId: google.maps.MapTypeId.ROADMAP
+					},
+					markers = [];
+
+				// draw map
+				map = new google.maps.Map(document.getElementById('indianamate-map'), mapOptions);
+			});
+
+			$.getJSON('/config.json', function(data){
+				indianamate = new Indianamate(map, data);
+			});
+		});
+	</script>-->
 	<script src="assets/js/indianamate.map.js"></script>
+	<script src="assets/js/indianamate.example.js"></script>
 </body>
 </html>
