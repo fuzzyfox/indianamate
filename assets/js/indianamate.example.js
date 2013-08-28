@@ -29,7 +29,7 @@ google.maps.event.addDomListener(window, 'load', function(){
 	// draw map
 	map = new google.maps.Map(document.getElementById('indianamate-map'), mapOptions);
 
-	$.getJSON('/config.json', function(config){
+	$.getJSON('config.json', function(config){
 		var key_locations = config.route,
 			i, j;
 
